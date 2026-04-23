@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit My Information</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='customer.css') }}">
+</head>
+<body>
+
+<div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2>Meraki</h2>
+        <a href="{{ url_for('shop.shop') }}">Shop</a>
+        <a href="{{ url_for('customer.customer_profile') }}">My Info</a>
+        <a href="{{ url_for('customer.customer_orders') }}">My Orders</a>
+        <a href="{{ url_for('customer.logout') }}">Logout</a>
+    </aside>
+
+    <!-- Content -->
+    <div class="container">
+
+        <h1 class="page-title">Edit My Information</h1>
+
+        <form method="POST">
+
+            <table class="orders-table">
+                <tr>
+                    <th>Field</th>
+                    <th>Value</th>
+                </tr>
+
+                <tr>
+                    <td>Name</td>
+                    <td>
+                        <input type="text" name="name"
+                               value="{{ customer.customer_name }}" required>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Email</td>
+                    <td>
+                        <input type="email" name="email"
+                               value="{{ customer.email }}" required>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Phone</td>
+                    <td>
+                        <input type="text" name="phone"
+                               value="{{ phone.phone_number if phone else '' }}">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Address</td>
+                    <td>
+                        <input type="text" name="address"
+                               value="{{ address.address if address else '' }}">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Password</td>
+                    <td>
+                        ********
+                        <a href="{{ url_for('customer.change_password') }}"
+                            style="margin-left:15px; color:#8f6c85;">
+                            Change
+                        </a>
+
+                    </td>
+                </tr>
+            </table>
+
+            <br>
+
+            <button class="place-order-btn">Save Changes</button>
+
+        </form>
+
+    </div>
+</div>
+
+</body>
+</html>

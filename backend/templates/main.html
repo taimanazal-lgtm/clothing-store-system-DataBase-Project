@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Meraki Seller Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+
+<!-- ===== Header  ===== -->
+<header class="top-header">
+    {% if role == "employee" %}
+        <h1>Welcome to Meraki employee home</h1>
+        <p>Manage your products and orders easily</p>
+    {% endif %}
+    {% if role == "seller" %}
+        <h1>Welcome to Meraki seller home</h1>
+        <p>Manage your store, products, orders, branches and employees easily</p>
+    {% endif %}
+</header>
+
+<!-- ===== Main Layout ===== -->
+<div class="main-container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <a href="/">Home</a>
+        <a href="/products">Products</a>
+        <a href="/orders">Orders</a>
+        {% if role == "seller" %}
+            <a href="/branches">Branches</a>
+            <a href="/employees">Employees</a>
+        {% endif %}
+
+
+    </aside>
+
+    <!-- Content -->
+    <section class="content">
+        <img src="{{ url_for('static', filename='images/mm.jpg') }}" alt="Meraki Girls">
+    </section>
+
+</div>
+
+</body>
+</html>

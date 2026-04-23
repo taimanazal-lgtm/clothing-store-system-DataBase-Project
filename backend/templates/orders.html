@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Orders</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='employees.css') }}">
+</head>
+<body>
+
+<div class="layout">
+
+    <!-- ===== Sidebar ===== -->
+    <aside class="sidebar">
+        <h2>Meraki</h2>
+
+        <a href="/">Home</a>
+        <a href="/products">Products</a>
+        <a href="/orders"class="active">Orders</a>
+
+        {% if role == "seller" %}
+            <a href="/branches">Branches</a>
+            <a href="/employees">Employees</a>
+        {% endif %}
+    </aside>
+
+    <!-- ===== Content ===== -->
+    <div class="container">
+
+        <h1>Orders</h1>
+
+        <!-- Add Order Form -->
+        <form method="POST">
+            <input type="date" name="order_date" required>
+            <select name="payment_status" required>
+                <option value="" disabled selected>Payment Status</option>
+                <option value="cash">Cash</option>
+                <option value="visa">Visa</option>
+                <option value="paypal">PayPal</option>
+            </select>
+
+            <select name="shipping_status" required>
+                <option value="" disabled selected>Shipping Status</option>
+                <option value="pending">Pending</option>
+                <option value="available">Available</option>
+                <option value="shipped">Shipped</option>
+            </select>
+
+            <select name="customer" required>
+                {% for c in customers %}
+                    <option value="{{ c[0] }}">{{ c[1] }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Add Order</button>
+        </form>
+
+        <!-- Orders Table -->
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+
+            {% for o in orders %}
+            <tr>
+                <td>{{ o[0] }}</td>
+                <td>{{ o[1] }}</td>
+                <td>{{ o[4] }}</td>
+                <td>{{ o[5] }} ₪</td>
+                <td>
+                    <a href="{{ url_for('orders.order_details', order_id=o[0]) }}">
+                        📦 Products
+                    </a>
+                    |
+                    <a href="{{ url_for('orders.delivery', order_id=o[0]) }}">
+                        🚚 Delivery
+                    </a>
+                    |
+                    <a href="{{ url_for('orders.edit_order', order_id=o[0]) }}">
+                        ✏️ Edit
+                    </a>
+                    |
+                    <form method="POST"
+                        action="{{ url_for('orders.delete_order', order_id=o[0]) }}"
+                        style="display:inline;">
+                        <button type="submit"
+                                onclick="return confirm('Delete this order?')">
+                            🗑 Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+</div>
+
+</body>
+</html>

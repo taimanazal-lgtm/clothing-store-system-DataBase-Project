@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Product</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='employees.css') }}">
+</head>
+<body>
+
+<div class="layout">
+
+    <!-- ===== Sidebar ===== -->
+    <aside class="sidebar">
+        <h2>Meraki</h2>
+
+        <a href="/">Home</a>
+        <a href="/products">Products</a>
+        <a href="/orders"class="active">Orders</a>
+
+        {% if role == "seller" %}
+            <a href="/branches">Branches</a>
+            <a href="/employees">Employees</a>
+        {% endif %}
+    </aside>
+
+    <!-- ===== Content ===== -->
+    <div class="container">
+
+        <h1>Edit Product</h1>
+
+        <a href="/products" style="
+            display:inline-block;
+            margin-bottom:20px;
+            color:#7b4a6d;
+            font-weight:500;
+            text-decoration:underline;
+        ">
+            ← Back to Products
+        </a>
+
+
+    <form method="POST" enctype="multipart/form-data">
+
+        <input type="text" name="title" value="{{ product[1] }}" required>
+
+        <select name="category" required>
+            {% for c in categories %}
+            <option value="{{ c[0] }}" {% if c[0] == product[2] %}selected{% endif %}>
+                {{ c[1] }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <select name="supplier" required>
+            {% for s in suppliers %}
+            <option value="{{ s[0] }}" {% if s[0] == product[3] %}selected{% endif %}>
+                {{ s[1] }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <input type="number" step="0.01" name="price" value="{{ product[4] }}" required>
+        <input type="number" name="quantity" value="{{ product[5] }}" required>
+        <input type="text" name="colors"
+            placeholder="Colors (e.g. red, blue, black)"
+            value="{{ colors or '' }}">
+
+        <input type="text" name="sizes"
+            placeholder="Sizes (e.g. S, M, L)"
+            value="{{ sizes or '' }}">
+
+        <label>Add New Images</label>
+        <input type="file" name="new_images[]" multiple>
+
+        <button type="submit">Update Product</button>
+    </form>
+    <h3>Current Images</h3>
+
+    {% if images %}
+    <div style="display:flex; gap:15px; margin-bottom:15px;">
+        {% for img in images %}
+        <div style="position:relative; width:120px;">
+
+            <!-- DELETE IMAGE -->
+            <form method="POST"
+                action="{{ url_for('products.delete_image', image_id=img[0]) }}"
+                style="position:absolute; top:-6px; left:-6px;">
+                <button type="submit"
+                        onclick="return confirm('Delete this image?')"
+                        style="background:transparent; border:none; font-size:18px; cursor:pointer;">
+                    ×
+                </button>
+            </form>
+
+            <!-- IMAGE -->
+            <img src="{{ url_for('static', filename=img[1].replace('static/', '')) }}"
+                width="120"
+                style="border-radius:8px; border:1px solid #ccc;">
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No images uploaded</p>
+    {% endif %}
+
+
+    </div>
+</div>
+
+</body>
+</html>

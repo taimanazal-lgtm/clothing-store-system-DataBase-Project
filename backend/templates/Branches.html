@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Branches</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='branches.css') }}">
+</head>
+<body>
+
+<div class="layout">
+
+    <!-- ===== Sidebar ===== -->
+    <aside class="sidebar">
+        <h2>Meraki</h2>
+        <a href="/">Home</a>
+        <a href="/products">Products</a>
+        <a href="/orders">Orders</a>
+        <a href="/branches" class="active">Branches</a>
+        <a href="/employees">Employees</a>
+    </aside>
+
+    <!-- ===== Main Content ===== -->
+    <div class="container">
+
+        <h1 class="title">Branches</h1>
+
+        <!-- ===== FORM ===== -->
+        <form method="post" class="form">
+            <input type="hidden" name="action" value="{{ 'update' if edit_branch else 'add' }}">
+
+            <input type="number" name="branch_id" placeholder="Branch ID"
+                   value="{{ edit_branch.branch_ID if edit_branch else '' }}"
+                   {% if edit_branch %}readonly{% endif %} required>
+
+            <input type="text" name="branch_name" placeholder="Branch Name"
+                   value="{{ edit_branch.branch_name if edit_branch else '' }}" required>
+
+            <input type="text" name="city" placeholder="City"
+                   value="{{ edit_branch.city if edit_branch else '' }}" required>
+
+            <button type="submit" class="btn">
+                {{ "Update Branch" if edit_branch else "Add Branch" }}
+            </button>
+        </form>
+
+        <!-- ===== TABLE ===== -->
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>City</th>
+                <th>Actions</th>
+            </tr>
+
+            {% for b in branches %}
+            <tr>
+                <td>{{ b.branch_ID }}</td>
+                <td>{{ b.branch_name }}</td>
+                <td>{{ b.city }}</td>
+                <td>
+                    <a class="action edit"
+                       href="{{ url_for('branches.branches', edit=b.branch_ID) }}">
+                        Update
+                    </a>
+
+                    <a class="action delete"
+                       href="{{ url_for('branches.branches', delete=b.branch_ID) }}"
+                       onclick="return confirm('Delete this branch?')">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+</div>
+
+</body>
+</html>

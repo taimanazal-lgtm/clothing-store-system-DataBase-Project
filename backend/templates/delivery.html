@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delivery</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='orders.css') }}">
+</head>
+<body>
+
+<div class="layout">
+
+<aside class="sidebar">
+    <h2>Meraki</h2>
+
+    <a href="/">Home</a>
+    <a href="/products">Products</a>
+    <a href="/orders"class="active">Orders</a>
+
+    {% if role == "seller" %}
+        <a href="/branches">Branches</a>
+        <a href="/employees">Employees</a>
+    {% endif %}
+</aside>
+
+<div class="page-content">
+
+<h1>Delivery - Order {{ order_id }}</h1>
+
+<form method="POST">
+    <input type="date" name="shipping_date"
+           value="{{ delivery.shipping_date if delivery else '' }}"
+           required>
+
+    <select name="delivery_status" required>
+        <option value="">Delivery Status</option>
+        {% for s in ['Pending', 'On the way', 'Delivered', 'Cancelled'] %}
+            <option value="{{ s }}"
+                {% if delivery and delivery.delivery_status == s %}selected{% endif %}>
+                {{ s }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <select name="employee" required>
+        {% for e in employees %}
+            <option value="{{ e.employee_ID }}"
+                {% if delivery and delivery.responsible_employee == e.employee_ID %}selected{% endif %}>
+                {{ e.employee_name }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <button>Save</button>
+</form>
+
+
+<a href="/orders">⬅ Back</a>
+
+</div>
+</div>
+
+</body>
+</html>

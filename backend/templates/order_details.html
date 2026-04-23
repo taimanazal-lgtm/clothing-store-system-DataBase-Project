@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Products</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='orders.css') }}">
+</head>
+<body>
+
+<div class="layout">
+
+    <!-- ===== Sidebar ===== -->
+    <aside class="sidebar">
+        <h2>Meraki</h2>
+
+        <a href="/">Home</a>
+        <a href="/products">Products</a>
+        <a href="/orders"class="active">Orders</a>
+
+        {% if role == "seller" %}
+            <a href="/branches">Branches</a>
+            <a href="/employees">Employees</a>
+        {% endif %}
+    </aside>
+
+    <!-- ===== Content ===== -->
+    <div class="container"style="max-width:900px; margin: 0 auto;">
+
+        <h1>Order {{ order_id }} Products</h1>
+
+        <!-- ADD PRODUCT -->
+        <a class="add-btn"
+           href="{{ url_for('orders.add_product_to_order', order_id=order_id) }}">
+            ➕ Add Product
+        </a>
+
+        <table>
+            <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+
+            {% for p in products %}
+            <tr>
+                <td>{{ p[1] }}</td>
+                <td>{{ p[2] }}</td>
+                <td>{{ p[3] }}</td>
+                <td>{{ p[4] }}</td>
+                <td>
+
+                    <a href="{{ url_for('orders.edit_product',
+                                        order_id=order_id,
+                                        product_id=p[0]) }}">
+                        ✏️ Edit
+                    </a>
+
+                    <form action="{{ url_for('orders.delete_product',
+                                            order_id=order_id,
+                                            product_id=p[0]) }}"
+                        method="POST"
+                        style="display:inline;">
+                        <button type="submit">🗑 Delete</button>
+                    </form>
+                </td>
+
+            </tr>
+            {% endfor %}
+        </table>
+
+        <br>
+        <a class="back-link" href="{{ url_for('orders.orders') }}">
+            ⬅ Back to Orders
+        </a>
+
+    </div>
+</div>
+
+</body>
+</html>

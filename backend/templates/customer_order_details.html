@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='employees.css') }}">
+</head>
+<body>
+
+<div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2>Meraki</h2>
+        <a href="{{ url_for('shop.shop') }}">Shop</a>
+        <a href="{{ url_for('customer.customer_profile') }}">My Info</a>
+        <a href="{{ url_for('customer.customer_orders') }}" class="active">My Orders</a>
+        <a href="{{ url_for('customer.logout') }}">Logout</a>
+    </aside>
+
+    <!-- Content -->
+    <div class="container">
+
+        <h1>Order #{{ order.order_ID }}</h1>
+
+        <p><strong>Date:</strong> {{ order.order_date }}</p>
+        <p><strong>Payment:</strong> {{ order.payment_status }}</p>
+        <p><strong>Shipping:</strong> {{ order.shipping_status }}</p>
+
+        <h2>Products</h2>
+
+        <table>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+            </tr>
+
+            {% for p in products %}
+            <tr>
+                <td>{{ p.product_title }}</td>
+                <td>{{ p.quantity }}</td>
+                <td>{{ p.price }} ₪</td>
+                <td>{{ p.total }} ₪</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        {% if delivery %}
+            <h2>Delivery</h2>
+            <p><strong>Status:</strong> {{ delivery.delivery_status }}</p>
+            <p><strong>Shipping Date:</strong> {{ delivery.shipping_date }}</p>
+            <p><strong>Driver:</strong> {{ delivery.employee_name }}</p>
+        {% else %}
+            <p><em>No delivery info yet.</em></p>
+        {% endif %}
+
+        <br>
+        <a href="{{ url_for('customer.customer_orders') }}">⬅ Back to My Orders</a>
+
+    </div>
+</div>
+
+</body>
+</html>

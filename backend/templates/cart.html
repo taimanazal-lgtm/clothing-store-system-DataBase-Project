@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shopping Cart - Meraki</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='shop.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<header class="top-header">
+    <div class="logo">
+        <h1> Meraki</h1>
+        <p>Shopping Cart</p>
+    </div>
+    
+</header>
+
+<div class="layout">
+
+    <div class="container" style="max-width: 1200px;">
+        
+        <h1 class="title">Your Shopping Cart</h1>
+        <a href="{{ url_for('shop.shop') }}">
+            <i class="fas fa-arrow-left"></i> Back to Shop
+        </a>
+        {% if cart %}
+        <div class="cart-container">
+            <div class="cart-items">
+                {% for product_id_str, item in cart.items() %}
+                <div class="cart-item">
+                    <div class="item-image">
+                        <div class="cart-image-placeholder">
+                            <i class="fas fa-tshirt"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="item-details">
+                        <h3>{{ item.title }}</h3>
+                        <p class="item-price">{{ item.price }} ₪ each</p>
+                        
+                        {% if item.color %}
+                        <p class="item-variant"><strong>Color:</strong> {{ item.color }}</p>
+                        {% endif %}
+                        
+                        {% if item.size %}
+                        <p class="item-variant"><strong>Size:</strong> {{ item.size }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="item-quantity">
+
+                        <!-- زر النقصان -->
+                        <form method="POST" action="{{ url_for('shop.update_cart', product_id=item.product_id) }}">
+                            <input type="hidden" name="action" value="decrease">
+                            <button type="submit" class="qty-btn">-</button>
+                        </form>
+
+
+                        <span class="qty-number">{{ item.quantity }}</span>
+
+                        <!-- زر الزيادة -->
+                        <form method="POST" action="{{ url_for('shop.update_cart', product_id=item.product_id) }}">
+                            <input type="hidden" name="action" value="increase">
+                            <button type="submit" class="qty-btn">+</button>
+                        </form>
+
+
+                    </div>
+
+                    <div class="item-total">
+                        <span class="total-price">{{ "%.2f"|format(item.price * item.quantity) }} ₪</span>
+                    </div>
+                    
+                    <div class="item-remove">
+                        <form method="POST" action="{{ url_for('shop.update_cart', product_id=item.product_id) }}" 
+                              onsubmit="return confirm('Remove this item from cart?')">
+                            <input type="hidden" name="action" value="remove">
+                            <button type="submit" class="remove-btn">
+                                <i class="fas fa-trash"></i> Remove
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="cart-summary">
+                <h3>Order Summary</h3>
+                
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>{{ "%.2f"|format(total) }} ₪</span>
+                </div>
+                
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span>
+                        {% if total >= 200 %}
+                        <span style="color: #4CAF50;">FREE</span>
+                        {% else %}
+                        25 ₪
+                        {% endif %}
+                    </span>
+                </div>
+                
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span>
+                        {% if total >= 200 %}
+                        {{ "%.2f"|format(total) }} ₪
+                        {% else %}
+                        {{ "%.2f"|format(total + 25) }} ₪
+                        {% endif %}
+                    </span>
+                </div>
+                
+                <div class="summary-actions">
+                    <form method="POST" action="/clear_cart" 
+                          onsubmit="return confirm('Clear entire shopping cart?')">
+                        <button type="submit" class="clear-btn">
+                            <i class="fas fa-trash"></i> Clear Cart
+                        </button>
+                    </form>
+                    
+                    <a href="{{ url_for('shop.checkout') }}" class="checkout-btn">
+                        <i class="fas fa-lock"></i> Proceed to Checkout
+                    </a>
+                </div>
+                
+                <div class="cart-promo">
+                    <p><i class="fas fa-gift"></i> Free shipping on orders over 200₪</p>
+                    <p><i class="fas fa-undo"></i> 30-day return policy</p>
+                    <p><i class="fas fa-shield-alt"></i> Secure payment</p>
+                </div>
+            </div>
+        </div>
+        
+        {% else %}
+        <div class="cart-empty-state">
+            <i class="fas fa-shopping-cart fa-4x"></i>
+            <h2>Your cart is empty</h2>
+            <p>Add some products to your cart and they will appear here</p>
+            <a href="{{ url_for('shop.shop') }}">
+                <i class="fas fa-arrow-left"></i> Start Shopping
+            </a>
+
+        </div>
+        {% endif %}
+        
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>Meraki</h3>
+            <p>Passion in every stitch</p>
+        </div>
+        <div class="footer-section">
+            <h4>Quick Links</h4>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="/contact">Contact</a>
+        </div>
+        <div class="footer-section">
+            <h4>Contact Info</h4>
+            <p><i class="fas fa-map-marker-alt"></i> Ramallah, Palestine</p>
+            <p><i class="fas fa-phone"></i> 056-789-1011</p>
+            <p><i class="fas fa-envelope"></i> info@meraki.com</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2024 Meraki. All rights reserved.</p>
+    </div>
+</footer>
+
+</body>
+</html>

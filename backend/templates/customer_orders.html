@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Orders</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='customer.css') }}">
+</head>
+<body>
+
+<div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2>Meraki</h2>
+
+        <a href="{{ url_for('shop.shop') }}">Shop</a>
+        <a href="{{ url_for('customer.customer_profile') }}">My Info</a>
+        <a href="{{ url_for('customer.customer_orders') }}" class="active">My Orders</a>
+        <a href="{{ url_for('customer.logout') }}">Logout</a>
+    </aside>
+
+    <!-- Content -->
+    <div class="container">
+
+        <h1>My Orders</h1>
+
+        {% if orders %}
+        <table>
+            <tr>
+                <th>Order ID</th>
+                <th>Date</th>
+                <th>Payment</th>
+                <th>Shipping</th>
+                <th>Total</th>
+                <th>Details</th>
+            </tr>
+
+            {% for o in orders %}
+            <tr>
+                <td>{{ o.order_ID }}</td>
+                <td>{{ o.order_date }}</td>
+                <td>{{ o.payment_status }}</td>
+                <td>{{ o.shipping_status }}</td>
+                <td>{{ o.total }} ₪</td>
+                <td>
+                    <a href="{{ url_for('customer.view_order', order_id=o.order_ID) }}">
+                        View
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+            <p>You have no orders yet.</p>
+        {% endif %}
+
+    </div>
+</div>
+
+</body>
+</html>

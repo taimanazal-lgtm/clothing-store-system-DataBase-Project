@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ product[1] }} - Meraki</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='shop.css') }}">
+</head>
+<body>
+
+<h1>{{ product[1] }}</h1>
+<p>Price: {{ product[2] }} ₪</p>
+<p>Category: {{ product[3] }}</p>
+
+<div class="product-gallery">
+
+    {% if img_index > 0 %}
+    <a class="arrow left"
+       href="{{ url_for('shop.product_details', product_id=product[0], img=img_index-1) }}">
+        &#10094;
+    </a>
+    {% endif %}
+
+    <img src="{{ url_for('static', filename=images[img_index]) }}"
+         class="main-image">
+
+    {% if img_index < images|length - 1 %}
+    <a class="arrow right"
+       href="{{ url_for('shop.product_details', product_id=product[0], img=img_index+1) }}">
+        &#10095;
+    </a>
+    {% endif %}
+
+</div>
+
+<br>
+<a href="{{ url_for('shop.shop') }}">⬅ Back to Shop</a>
+
+</body>
+</html>
